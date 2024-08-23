@@ -17,10 +17,12 @@ const TaskList = ({ todos, removeTodo, editTodo }) => {
     setEditingTodoId(null);
   };
 
-  if(todos.length === 0) {
-    return <>
-      <h1 className="text-2xl font-bold">📝 Start adding your first task </h1>
-    </>
+  if (todos.length === 0) {
+    return (
+      <>
+        <h1 className="text-2xl font-bold">📝 Start adding your first task </h1>
+      </>
+    );
   }
 
   return (
@@ -31,7 +33,7 @@ const TaskList = ({ todos, removeTodo, editTodo }) => {
           <Draggable key={todo.id} draggableId={todo.id} index={index}>
             {(provided) => (
               <div
-                className="flex justify-between items-center gap-4 bg-slate-400 mb-2 p-2 rounded-md max-w-96 min-h-12 max-h-20"
+                className="flex justify-between items-center gap-4 bg-slate-400 mb-2 p-2 rounded-md md:max-w-96 min-h-12 max-h-20"
                 onMouseEnter={() => setHoveredTodoId(todo.id)}
                 onMouseLeave={() => setHoveredTodoId(null)}
                 ref={provided.innerRef}

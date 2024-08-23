@@ -225,7 +225,7 @@ const App = () => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex justify-between items-start gap-8 px-8 mt-16">
+      <div className="flex flex-col w-full md:flex md:flex-row md:justify-between md:items-start gap-8 px-8 mt-16">
         <div className="bg-gradient-to-t from-amber-400 to-slate-800 px-4 py-8 rounded-lg flex-1">
           <TaskBoard
             heading="To do"
