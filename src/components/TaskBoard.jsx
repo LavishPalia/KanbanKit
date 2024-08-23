@@ -50,7 +50,7 @@ const TaskBoard = ({
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
                 placeholder="Enter a task..."
-                className="block w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                className="block w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-black text-white"
               />
               <div className="flex gap-4">
                 <button

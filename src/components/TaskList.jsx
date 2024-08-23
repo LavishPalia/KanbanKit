@@ -48,7 +48,7 @@ const TaskList = ({ todos, removeTodo, editTodo }) => {
                       id="edittodo"
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
-                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-black text-white"
                     />
                     <button
                       className="bg-gray-300 hover:bg-gray-200 p-2 rounded-md"
