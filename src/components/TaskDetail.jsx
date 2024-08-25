@@ -128,28 +128,30 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate }) => {
                     </button>
                   </div>
                 ) : (
-                  <div className="flex w-full min-h-12 items-center hover:bg-gray-700/75 px-2 py-1 rounded-lg">
-                    <input
-                      type="checkbox"
-                      name=""
-                      id=""
-                      checked={subtask.completed}
-                      onChange={() => handleToggleSubtaskComplete(subtask.id)}
-                      className="w-4 h-8 cursor-pointer"
-                    />
-                    <h2 className="text-lg flex-1 ml-3 max-w-60 md:max-w-xl">
-                      {subtask.title} {subtask.completed && "🏅"}
-                    </h2>
+                  <div className="flex w-full min-h-12 items-center justify-between hover:bg-gray-700/75 px-2 py-1 rounded-lg">
+                    <div className="flex gap-2 justify-center items-center">
+                      <input
+                        type="checkbox"
+                        name=""
+                        id=""
+                        checked={subtask.completed}
+                        onChange={() => handleToggleSubtaskComplete(subtask.id)}
+                        className="w-6 h-14 md:w-4 md:h-8 cursor-pointer"
+                      />
+                      <h2 className="text-xl md:text-lg flex-1 ml-3 max-w-52 md:max-w-xl">
+                        {subtask.title} {subtask.completed && "🏅"}
+                      </h2>
+                    </div>
                     {hoveredSubtaskId === subtask.id && (
-                      <div className="flex gap-2">
+                      <div className="flex gap-2 justify-center items-center">
                         <button
-                          className=" bg-gray-300 hover:bg-gray-200 p-2 rounded-md text-black text-[10px]"
+                          className=" bg-gray-300 hover:bg-gray-200 p-2 rounded-md text-black md:text-[10px]"
                           onClick={() => handleEditClick(subtask)}
                         >
                           ✎
                         </button>
                         <button
-                          className=" bg-gray-300 hover:bg-gray-200 p-2 rounded-md text-[10px]"
+                          className=" bg-gray-300 hover:bg-gray-200 p-2 rounded-md md:text-[10px]"
                           onClick={() => handleDeleteSubtask(subtask.id)}
                         >
                           ✖️
@@ -193,10 +195,10 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate }) => {
         </div>
       ) : (
         <button
-          className="text-xl mt-4 bg-slate-900 font-medium px-6 py-2 rounded-md"
+          className="text-2xl md:text-xl mt-4 bg-slate-900 font-medium px-6 py-2 rounded-md"
           onClick={handleAddCardClick}
         >
-          <span className="text-2xl">+</span> &nbsp;Add Subtask
+          <span className="text-3xl md:text-2xl">+</span> &nbsp;Add Subtask
         </button>
       )}
     </div>
