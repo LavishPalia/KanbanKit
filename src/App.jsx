@@ -7,16 +7,31 @@ const TODO_TASKS = [
     id: self.crypto.randomUUID(),
     title: "Implement Drag and Drop for Trello Cards",
     category: "TODOS",
+    subtasks: [],
   },
   {
     id: self.crypto.randomUUID(),
     title: "Refactor Components for Reusability",
     category: "TODOS",
+    subtasks: [
+      {
+        id: self.crypto.randomUUID(),
+        title: "Create vite application",
+        completed: true,
+      },
+    ],
   },
   {
     id: self.crypto.randomUUID(),
     title: "Integrate Redux for State Management",
     category: "TODOS",
+    subtasks: [
+      {
+        id: self.crypto.randomUUID(),
+        title: "Create vite application",
+        completed: false,
+      },
+    ],
   },
 ];
 
@@ -25,16 +40,37 @@ const IN_PROGRESS_TASKS = [
     id: self.crypto.randomUUID(),
     title: "Create Trello Frontend",
     category: "INPROGRESS",
+    subtasks: [
+      {
+        id: self.crypto.randomUUID(),
+        title: "Create vite application",
+        completed: false,
+      },
+    ],
   },
   {
     id: self.crypto.randomUUID(),
     title: "Design data flow between components",
     category: "INPROGRESS",
+    subtasks: [
+      {
+        id: self.crypto.randomUUID(),
+        title: "Create vite application",
+        completed: true,
+      },
+    ],
   },
   {
     id: self.crypto.randomUUID(),
     title: "Setup Context to avoid Prop drilling",
     category: "INPROGRESS",
+    subtasks: [
+      {
+        id: self.crypto.randomUUID(),
+        title: "Create vite application",
+        completed: true,
+      },
+    ],
   },
 ];
 
@@ -43,16 +79,37 @@ const DONE_TASKS = [
     id: self.crypto.randomUUID(),
     title: "Setup Initial Project Structure",
     category: "DONE",
+    subtasks: [
+      {
+        id: self.crypto.randomUUID(),
+        title: "Create vite application",
+        completed: true,
+      },
+    ],
   },
   {
     id: self.crypto.randomUUID(),
     title: "Create Reusable Button Component",
     category: "DONE",
+    subtasks: [
+      {
+        id: self.crypto.randomUUID(),
+        title: "Create vite application",
+        completed: false,
+      },
+    ],
   },
   {
     id: self.crypto.randomUUID(),
     title: "Configure Webpack and Babel for Development",
     category: "DONE",
+    subtasks: [
+      {
+        id: self.crypto.randomUUID(),
+        title: "Create vite application",
+        completed: true,
+      },
+    ],
   },
 ];
 
@@ -66,6 +123,39 @@ const App = () => {
   const [done, setDone] = useState(
     JSON.parse(localStorage.getItem("done")) || []
   );
+
+  const handleUpdateSubtasks = (taskCategory, taskId, updatedSubtasks) => {
+    let updatedTasks = [];
+
+    switch (taskCategory) {
+      case "TODOS":
+        updatedTasks = todos.map((task) =>
+          task.id === taskId ? { ...task, subtasks: updatedSubtasks } : task
+        );
+        setTodos(updatedTasks);
+        // Persist to local storage
+        localStorage.setItem("todos", JSON.stringify(updatedTasks));
+        break;
+      case "INPROGRESS":
+        updatedTasks = inProgress.map((task) =>
+          task.id === taskId ? { ...task, subtasks: updatedSubtasks } : task
+        );
+        setInProgess(updatedTasks);
+        // Persist to local storage
+        localStorage.setItem("inprogress", JSON.stringify(updatedTasks));
+        break;
+      case "DONE":
+        updatedTasks = done.map((task) =>
+          task.id === taskId ? { ...task, subtasks: updatedSubtasks } : task
+        );
+        setDone(updatedTasks);
+        // Persist to local storage
+        localStorage.setItem("done", JSON.stringify(updatedTasks));
+        break;
+      default:
+        break;
+    }
+  };
 
   const addNewTask = (category, task) => {
     let updatedTasks;
@@ -144,8 +234,6 @@ const App = () => {
 
   const onDragEnd = (result) => {
     const { destination, source } = result;
-
-    console.log(destination, source);
 
     if (!destination) return;
     if (
@@ -234,6 +322,7 @@ const App = () => {
             category="TODOS"
             removeTodo={removeTask}
             editTodo={editTask}
+            onUpdateSubtasks={handleUpdateSubtasks}
           />
         </div>
         <div className="bg-gradient-to-t from-indigo-400 to-slate-950 px-4 py-8 rounded-lg flex-1">
@@ -244,6 +333,7 @@ const App = () => {
             category="INPROGRESS"
             removeTodo={removeTask}
             editTodo={editTask}
+            onUpdateSubtasks={handleUpdateSubtasks}
           />
         </div>
         <div className="bg-gradient-to-t from-cyan-400 to-slate-900 px-4 py-8 rounded-lg flex-1">
@@ -254,6 +344,7 @@ const App = () => {
             category="DONE"
             removeTodo={removeTask}
             editTodo={editTask}
+            onUpdateSubtasks={handleUpdateSubtasks}
           />
         </div>
       </div>

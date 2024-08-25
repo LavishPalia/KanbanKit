@@ -1,6 +1,8 @@
 import React, { useRef, useState } from "react";
 import TaskList from "./TaskList";
 import { Droppable } from "react-beautiful-dnd";
+import Modal from "./Modal";
+import TaskDetail from "./TaskDetail";
 
 const TaskBoard = ({
   heading,
@@ -9,14 +11,16 @@ const TaskBoard = ({
   category,
   removeTodo,
   editTodo,
+  onUpdateSubtasks,
 }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [newTask, setNewTask] = useState("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [currentTask, setCurrentTask] = useState(null);
+
   const inputRef = useRef(null);
 
   const handleAddTask = () => {
-    console.log("ran");
-
     const task = {
       id: self.crypto.randomUUID(),
       title: newTask,
@@ -36,12 +40,33 @@ const TaskBoard = ({
     setIsAdding(true);
   };
 
+  const openModal = (task) => {
+    setIsModalOpen(true);
+    setCurrentTask(task);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setCurrentTask(null);
+  };
+
+  const handleSubtaskUpdate = (updatedSubtasks) => {
+    console.log(currentTask.category);
+    console.log(currentTask.id);
+    console.log(updatedSubtasks);
+    onUpdateSubtasks(currentTask.category, currentTask.id, updatedSubtasks);
+  };
+
   return (
     <Droppable droppableId={category}>
       {(provided) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
           <p className="mb-4 text-2xl">{heading}</p>
-          <TaskList todos={todos} removeTodo={removeTodo} editTodo={editTodo} />
+          <TaskList
+            todos={todos}
+            removeTodo={removeTodo}
+            editTodo={editTodo}
+            onTitleClick={openModal}
+          />
           {isAdding ? (
             <div className="mt-4">
               <input
@@ -77,6 +102,16 @@ const TaskBoard = ({
             </button>
           )}
           {provided.placeholder}
+
+          {isModalOpen && (
+            <Modal isOpen={isModalOpen} onClose={closeModal}>
+              <TaskDetail
+                task={currentTask}
+                onClose={closeModal}
+                onSubtaskUpdate={handleSubtaskUpdate}
+              />
+            </Modal>
+          )}
         </div>
       )}
     </Droppable>

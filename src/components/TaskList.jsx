@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-const TaskList = ({ todos, removeTodo, editTodo }) => {
+const TaskList = ({ todos, removeTodo, editTodo, onTitleClick }) => {
   const [hoveredTodoId, setHoveredTodoId] = useState(null);
   const [editingTodoId, setEditingTodoId] = useState(null);
   const [editText, setEditText] = useState("");
@@ -66,7 +66,10 @@ const TaskList = ({ todos, removeTodo, editTodo }) => {
                   </div>
                 ) : (
                   <>
-                    <h1 className="text-gray-800 font-medium text-[15px] max-w-80 text-wrap">
+                    <h1
+                      className="text-gray-800 font-medium text-[15px] max-w-80 text-wrap cursor-pointer"
+                      onClick={() => onTitleClick(todo)}
+                    >
                       {todo.title}
                     </h1>
                     {hoveredTodoId === todo.id && (
