@@ -3,6 +3,8 @@ import TaskBoard from "./components/TaskBoard";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 import { TASKBOARDS } from "./data.js";
+import Header from "./components/Header.jsx";
+import Footer from "./components/Footer.jsx";
 
 const App = () => {
   const [taskBoards, setTaskBoards] = useState(
@@ -189,10 +191,11 @@ const App = () => {
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
+      <Header />
       <Droppable droppableId="all-boards" direction="horizontal" type="board">
         {(provided) => (
           <div
-            className="flex flex-col w-full md:flex md:flex-row md:items-start gap-8 px-8 mt-16"
+            className="flex flex-col w-full md:flex md:flex-row md:items-start gap-8 px-8 mt-12"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
@@ -232,7 +235,8 @@ const App = () => {
                   value={newTaskBoardTitle}
                   onChange={(e) => setNewTaskBoardTitle(e.target.value)}
                   placeholder="Enter list name..."
-                  className="block w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-black text-white"
+                  className="block w-full px-4 py-2 mb-2 border rounded-md focus:outline-none
+                   focus:ring-2 focus:ring-indigo-500 bg-black text-white"
                 />
                 <div className="flex gap-4 mt-4">
                   <button
@@ -264,6 +268,8 @@ const App = () => {
           </div>
         )}
       </Droppable>
+
+      <Footer />
     </DragDropContext>
   );
 };

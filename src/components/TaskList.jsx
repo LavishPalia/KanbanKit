@@ -47,6 +47,7 @@ const TaskList = ({ todos, removeTodo, editTodo, onTitleClick }) => {
                     <button
                       className="bg-gray-300 hover:bg-gray-200 p-2 rounded-md"
                       onClick={() => handleSaveEdit(todo.id)}
+                      disabled={editText === ""}
                     >
                       ✔️
                     </button>

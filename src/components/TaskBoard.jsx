@@ -77,6 +77,10 @@ const TaskBoard = ({
       onUpdateBoardTitle(boardId, updatedTaskBoardTitle);
       setIsEditingTitle(false);
     }
+
+    if (e.key === "Escape") {
+      setIsEditingTitle(false);
+    }
   };
 
   const handleDeleteBoard = () => {
