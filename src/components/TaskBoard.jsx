@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import TaskList from "./TaskList";
 import { Droppable } from "react-beautiful-dnd";
 import Modal from "./Modal";
@@ -7,26 +7,37 @@ import TaskDetail from "./TaskDetail";
 const TaskBoard = ({
   heading,
   todos,
+  boardId,
   addNewTask,
-  category,
   removeTodo,
   editTodo,
   onUpdateSubtasks,
+  onUpdateBoardTitle,
+  onDeleteBoard,
 }) => {
   const [isAdding, setIsAdding] = useState(false);
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [newTask, setNewTask] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentTask, setCurrentTask] = useState(null);
+  const [updatedTaskBoardTitle, setUpdatedTaskBoardTitle] = useState("");
 
   const inputRef = useRef(null);
+  const boardTitleInputRef = useRef(null);
+
+  useEffect(() => {
+    if (isEditingTitle && boardTitleInputRef.current) {
+      boardTitleInputRef.current.focus();
+    }
+  }, [isEditingTitle]);
 
   const handleAddTask = () => {
     const task = {
       id: self.crypto.randomUUID(),
       title: newTask,
-      category: category,
+      subtasks: [],
     };
-    addNewTask(category, task);
+    addNewTask(boardId, task);
 
     setNewTask("");
 
@@ -50,21 +61,66 @@ const TaskBoard = ({
   };
 
   const handleSubtaskUpdate = (updatedSubtasks) => {
-    console.log(currentTask.category);
-    console.log(currentTask.id);
-    console.log(updatedSubtasks);
-    onUpdateSubtasks(currentTask.category, currentTask.id, updatedSubtasks);
+    onUpdateSubtasks(boardId, currentTask.id, updatedSubtasks);
+  };
+
+  const handleEditTask = (editText, todoId) => {
+    editTodo(boardId, editText, todoId);
+  };
+
+  const handleRemoveTask = (todoId) => {
+    removeTodo(boardId, todoId);
+  };
+
+  const handleBoardTitleUpdate = (e) => {
+    if (e.key === "Enter") {
+      onUpdateBoardTitle(boardId, updatedTaskBoardTitle);
+      setIsEditingTitle(false);
+    }
+  };
+
+  const handleDeleteBoard = () => {
+    onDeleteBoard(boardId);
   };
 
   return (
-    <Droppable droppableId={category}>
+    <Droppable droppableId={boardId}>
       {(provided) => (
         <div ref={provided.innerRef} {...provided.droppableProps}>
-          <p className="mb-4 text-2xl">{heading}</p>
+          {isEditingTitle === true ? (
+            <input
+              type="text"
+              name="Board Title"
+              id="editboardtitle"
+              ref={boardTitleInputRef}
+              value={updatedTaskBoardTitle}
+              onChange={(e) => setUpdatedTaskBoardTitle(e.target.value)}
+              onKeyDown={handleBoardTitleUpdate}
+              className="w-full flex-1 px-4 py-2 mb-3 border rounded-md border-none focus:outline-none focus:ring-1 focus:ring-green-500 bg-[#22272B] text-white"
+            />
+          ) : (
+            <div className="flex items-start justify-between relative">
+              <p
+                className="mb-4 text-2xl cursor-pointer max-w-44 w-full tracking-tight"
+                onClick={() => {
+                  setUpdatedTaskBoardTitle(heading);
+                  setIsEditingTitle(true);
+                }}
+              >
+                {heading}
+              </p>
+              <button
+                className="text-[12px] text-red-500 hover:scale-105 mb-4 transition-all"
+                onClick={handleDeleteBoard}
+              >
+                Delete Board
+              </button>
+            </div>
+          )}
           <TaskList
             todos={todos}
-            removeTodo={removeTodo}
-            editTodo={editTodo}
+            removeTodo={handleRemoveTask}
+            editTodo={handleEditTask}
             onTitleClick={openModal}
           />
           {isAdding ? (
@@ -75,7 +131,7 @@ const TaskBoard = ({
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
                 placeholder="Enter a task..."
-                className="block w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-black text-white"
+                className="block w-full px-4 py-2 mb-2 border-none rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-black text-white"
               />
               <div className="flex gap-4">
                 <button
@@ -95,7 +151,7 @@ const TaskBoard = ({
             </div>
           ) : (
             <button
-              className="text-xl mt-4 bg-slate-900 font-medium px-6 py-2 rounded-md"
+              className="text-xl mt-2 bg-slate-900 font-medium px-6 py-2 rounded-md"
               onClick={handleAddCardClick}
             >
               <span className="text-2xl">+</span> &nbsp;Add a Card
@@ -107,6 +163,7 @@ const TaskBoard = ({
             <Modal isOpen={isModalOpen} onClose={closeModal}>
               <TaskDetail
                 task={currentTask}
+                boardTitle={heading}
                 onClose={closeModal}
                 onSubtaskUpdate={handleSubtaskUpdate}
               />

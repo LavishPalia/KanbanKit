@@ -1,239 +1,123 @@
 import React, { useState } from "react";
 import TaskBoard from "./components/TaskBoard";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
-const TODO_TASKS = [
-  {
-    id: self.crypto.randomUUID(),
-    title: "Implement Drag and Drop for Trello Cards",
-    category: "TODOS",
-    subtasks: [],
-  },
-  {
-    id: self.crypto.randomUUID(),
-    title: "Refactor Components for Reusability",
-    category: "TODOS",
-    subtasks: [
-      {
-        id: self.crypto.randomUUID(),
-        title: "Create vite application",
-        completed: true,
-      },
-    ],
-  },
-  {
-    id: self.crypto.randomUUID(),
-    title: "Integrate Redux for State Management",
-    category: "TODOS",
-    subtasks: [
-      {
-        id: self.crypto.randomUUID(),
-        title: "Create vite application",
-        completed: false,
-      },
-    ],
-  },
-];
-
-const IN_PROGRESS_TASKS = [
-  {
-    id: self.crypto.randomUUID(),
-    title: "Create Trello Frontend",
-    category: "INPROGRESS",
-    subtasks: [
-      {
-        id: self.crypto.randomUUID(),
-        title: "Create vite application",
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: self.crypto.randomUUID(),
-    title: "Design data flow between components",
-    category: "INPROGRESS",
-    subtasks: [
-      {
-        id: self.crypto.randomUUID(),
-        title: "Create vite application",
-        completed: true,
-      },
-    ],
-  },
-  {
-    id: self.crypto.randomUUID(),
-    title: "Setup Context to avoid Prop drilling",
-    category: "INPROGRESS",
-    subtasks: [
-      {
-        id: self.crypto.randomUUID(),
-        title: "Create vite application",
-        completed: true,
-      },
-    ],
-  },
-];
-
-const DONE_TASKS = [
-  {
-    id: self.crypto.randomUUID(),
-    title: "Setup Initial Project Structure",
-    category: "DONE",
-    subtasks: [
-      {
-        id: self.crypto.randomUUID(),
-        title: "Create vite application",
-        completed: true,
-      },
-    ],
-  },
-  {
-    id: self.crypto.randomUUID(),
-    title: "Create Reusable Button Component",
-    category: "DONE",
-    subtasks: [
-      {
-        id: self.crypto.randomUUID(),
-        title: "Create vite application",
-        completed: false,
-      },
-    ],
-  },
-  {
-    id: self.crypto.randomUUID(),
-    title: "Configure Webpack and Babel for Development",
-    category: "DONE",
-    subtasks: [
-      {
-        id: self.crypto.randomUUID(),
-        title: "Create vite application",
-        completed: true,
-      },
-    ],
-  },
-];
+import { TASKBOARDS } from "./data.js";
 
 const App = () => {
-  const [todos, setTodos] = useState(
-    JSON.parse(localStorage.getItem("todos")) || []
-  );
-  const [inProgress, setInProgess] = useState(
-    JSON.parse(localStorage.getItem("inprogress")) || []
-  );
-  const [done, setDone] = useState(
-    JSON.parse(localStorage.getItem("done")) || []
+  const [taskBoards, setTaskBoards] = useState(
+    JSON.parse(localStorage.getItem("taskboards")) || []
   );
 
-  const handleUpdateSubtasks = (taskCategory, taskId, updatedSubtasks) => {
-    let updatedTasks = [];
+  const [newTaskBoardTitle, setNewTaskBoardTitle] = useState("");
+  const [addingNewList, setAddingNewList] = useState(false);
 
-    switch (taskCategory) {
-      case "TODOS":
-        updatedTasks = todos.map((task) =>
-          task.id === taskId ? { ...task, subtasks: updatedSubtasks } : task
-        );
-        setTodos(updatedTasks);
-        // Persist to local storage
-        localStorage.setItem("todos", JSON.stringify(updatedTasks));
-        break;
-      case "INPROGRESS":
-        updatedTasks = inProgress.map((task) =>
-          task.id === taskId ? { ...task, subtasks: updatedSubtasks } : task
-        );
-        setInProgess(updatedTasks);
-        // Persist to local storage
-        localStorage.setItem("inprogress", JSON.stringify(updatedTasks));
-        break;
-      case "DONE":
-        updatedTasks = done.map((task) =>
-          task.id === taskId ? { ...task, subtasks: updatedSubtasks } : task
-        );
-        setDone(updatedTasks);
-        // Persist to local storage
-        localStorage.setItem("done", JSON.stringify(updatedTasks));
-        break;
-      default:
-        break;
-    }
+  const handleAddTaskBoard = () => {
+    const newTaskBoard = {
+      id: self.crypto.randomUUID(),
+      heading: newTaskBoardTitle,
+      todos: [],
+    };
+
+    const updatedTaskBoards = [...taskBoards, newTaskBoard];
+    setTaskBoards(updatedTaskBoards);
+    localStorage.setItem("taskboards", JSON.stringify(updatedTaskBoards));
+    setNewTaskBoardTitle("");
   };
 
-  const addNewTask = (category, task) => {
-    let updatedTasks;
-    switch (category) {
-      case "TODOS":
-        updatedTasks = [...todos, task];
-        setTodos(updatedTasks);
-        localStorage.setItem("todos", JSON.stringify(updatedTasks));
-        break;
-      case "INPROGRESS":
-        updatedTasks = [...inProgress, task];
-        setInProgess(updatedTasks);
-        localStorage.setItem("inprogress", JSON.stringify(updatedTasks));
-        break;
-      case "DONE":
-        updatedTasks = [...done, task];
-        setDone(updatedTasks);
-        localStorage.setItem("done", JSON.stringify(updatedTasks));
-        break;
-      default:
-        break;
-    }
+  const handleDeleteTaskBoard = (boardId) => {
+    const updatedTaskBoards = taskBoards.filter(
+      (taskBoard) => taskBoard.id != boardId
+    );
+
+    setTaskBoards(updatedTaskBoards);
+    localStorage.setItem("taskboards", JSON.stringify(updatedTaskBoards));
   };
 
-  const removeTask = (category, taskId) => {
-    let filteredTasks;
-    switch (category) {
-      case "TODOS":
-        filteredTasks = todos.filter((todo) => todo.id !== taskId);
-        setTodos(filteredTasks);
-        localStorage.setItem("todos", JSON.stringify(filteredTasks));
-        break;
-      case "INPROGRESS":
-        filteredTasks = inProgress.filter((todo) => todo.id !== taskId);
-        setInProgess(filteredTasks);
-        localStorage.setItem("inprogress", JSON.stringify(filteredTasks));
-        break;
-      case "DONE":
-        filteredTasks = done.filter((todo) => todo.id !== taskId);
-        setDone(filteredTasks);
-        localStorage.setItem("done", JSON.stringify(filteredTasks));
-        break;
-      default:
-        break;
-    }
+  const onUpdateBoardTitle = (boardId, newTitle) => {
+    const updatedBoards = taskBoards.map((taskBoard) =>
+      taskBoard.id === boardId ? { ...taskBoard, heading: newTitle } : taskBoard
+    );
+    setTaskBoards(updatedBoards);
+    localStorage.setItem("taskboards", JSON.stringify(updatedBoards));
   };
 
-  const editTask = (category, taskTitle, taskId) => {
-    let updatedTasks;
-    switch (category) {
-      case "TODOS":
-        updatedTasks = todos.map((todo) =>
-          todo.id === taskId ? { ...todo, title: taskTitle } : todo
+  const handleUpdateSubtasks = (boardId, taskId, updatedSubtasks) => {
+    const updatedBoards = taskBoards.map((taskBoard) => {
+      if (taskBoard.id === boardId) {
+        const updatedTodos = taskBoard.todos.map((task) => {
+          if (task.id === taskId) {
+            return { ...task, subtasks: updatedSubtasks };
+          }
+          return task;
+        });
+
+        return { ...taskBoard, todos: updatedTodos };
+      }
+
+      return taskBoard;
+    });
+
+    setTaskBoards(updatedBoards);
+    localStorage.setItem("taskboards", JSON.stringify(updatedBoards));
+  };
+
+  const addNewTask = (boardId, newTask) => {
+    const updatedBoards = taskBoards.map((taskBoard) => {
+      return taskBoard.id === boardId
+        ? { ...taskBoard, todos: [...taskBoard.todos, newTask] }
+        : taskBoard;
+    });
+
+    setTaskBoards(updatedBoards);
+
+    localStorage.setItem("taskboards", JSON.stringify(updatedBoards));
+  };
+
+  const removeTask = (boardId, taskId) => {
+    const updatedBoards = taskBoards.map((taskBoard) => {
+      if (taskBoard.id === boardId) {
+        const filteredTodos = taskBoard.todos.filter(
+          (task) => task.id !== taskId
         );
-        setTodos(updatedTasks);
-        localStorage.setItem("todos", JSON.stringify(updatedTasks));
-        break;
-      case "INPROGRESS":
-        updatedTasks = inProgress.map((todo) =>
-          todo.id === taskId ? { ...todo, title: taskTitle } : todo
+
+        return {
+          ...taskBoard,
+          todos: filteredTodos,
+        };
+      }
+
+      return taskBoard;
+    });
+
+    setTaskBoards(updatedBoards);
+
+    localStorage.setItem("taskboards", JSON.stringify(updatedBoards));
+  };
+
+  const editTask = (boardId, taskTitle, taskId) => {
+    const updatedBoards = taskBoards.map((taskBoard) => {
+      if (taskBoard.id === boardId) {
+        const updatedTodos = taskBoard.todos.map((task) =>
+          task.id === taskId ? { ...task, title: taskTitle } : task
         );
-        setInProgess(updatedTasks);
-        localStorage.setItem("inprogress", JSON.stringify(updatedTasks));
-        break;
-      case "DONE":
-        updatedTasks = done.map((todo) =>
-          todo.id === taskId ? { ...todo, title: taskTitle } : todo
-        );
-        setDone(updatedTasks);
-        localStorage.setItem("done", JSON.stringify(updatedTasks));
-        break;
-      default:
-        break;
-    }
+
+        return {
+          ...taskBoard,
+          todos: updatedTodos,
+        };
+      }
+
+      return taskBoard;
+    });
+
+    setTaskBoards(updatedBoards);
+
+    localStorage.setItem("taskboards", JSON.stringify(updatedBoards));
   };
 
   const onDragEnd = (result) => {
-    const { destination, source } = result;
+    const { destination, source, type } = result;
 
     if (!destination) return;
     if (
@@ -243,111 +127,143 @@ const App = () => {
       return;
     }
 
-    let sourceTasks, setSourceTasks, destinationTasks, setDestinationTasks;
-    switch (source.droppableId) {
-      case "TODOS":
-        sourceTasks = todos;
-        setSourceTasks = setTodos;
-        break;
-      case "INPROGRESS":
-        sourceTasks = inProgress;
-        setSourceTasks = setInProgess;
-        break;
-      case "DONE":
-        sourceTasks = done;
-        setSourceTasks = setDone;
-        break;
-      default:
-        break;
+    if (type === "board") {
+      const updatedTaskBoards = Array.from(taskBoards);
+      const [movedBoard] = updatedTaskBoards.splice(source.index, 1);
+      updatedTaskBoards.splice(destination.index, 0, movedBoard);
+
+      setTaskBoards(updatedTaskBoards);
+      localStorage.setItem("taskboards", JSON.stringify(updatedTaskBoards));
+    } else {
+      const sourceBoardIndex = taskBoards.findIndex(
+        (board) => board.id === source.droppableId
+      );
+      const destinationBoardIndex = taskBoards.findIndex(
+        (board) => board.id === destination.droppableId
+      );
+
+      const sourceBoard = taskBoards[sourceBoardIndex];
+      const destinationBoard = taskBoards[destinationBoardIndex];
+
+      const [movedTask] = sourceBoard.todos.splice(source.index, 1);
+
+      if (source.droppableId === destination.droppableId) {
+        sourceBoard.todos.splice(destination.index, 0, movedTask);
+      } else {
+        destinationBoard.todos.splice(destination.index, 0, movedTask);
+      }
+
+      const updatedBoards = [...taskBoards];
+      updatedBoards[sourceBoardIndex] = sourceBoard;
+      updatedBoards[destinationBoardIndex] = destinationBoard;
+
+      setTaskBoards(updatedBoards);
+      localStorage.setItem("taskboards", JSON.stringify(updatedBoards));
     }
 
-    switch (destination.droppableId) {
-      case "TODOS":
-        destinationTasks = todos;
-        setDestinationTasks = setTodos;
-        break;
-      case "INPROGRESS":
-        destinationTasks = inProgress;
-        setDestinationTasks = setInProgess;
-        break;
-      case "DONE":
-        destinationTasks = done;
-        setDestinationTasks = setDone;
-        break;
-      default:
-        break;
-    }
+    const sourceBoardIndex = taskBoards.findIndex(
+      (board) => board.id === source.droppableId
+    );
+    const destinationBoardIndex = taskBoards.findIndex(
+      (board) => board.id === destination.droppableId
+    );
+
+    const sourceBoard = taskBoards[sourceBoardIndex];
+    const destinationBoard = taskBoards[destinationBoardIndex];
+
+    const [movedTask] = sourceBoard.todos.splice(source.index, 1);
 
     if (source.droppableId === destination.droppableId) {
-      const reorderedTasks = Array.from(sourceTasks);
-      const [movedTask] = reorderedTasks.splice(source.index, 1);
-      reorderedTasks.splice(destination.index, 0, movedTask);
-      setSourceTasks(reorderedTasks);
-      localStorage.setItem(
-        source.droppableId.toLowerCase(),
-        JSON.stringify(reorderedTasks)
-      );
+      sourceBoard.todos.splice(destination.index, 0, movedTask);
     } else {
-      const startTasks = Array.from(sourceTasks);
-      const [movedTask] = startTasks.splice(source.index, 1);
-      setSourceTasks(startTasks);
-      localStorage.setItem(
-        source.droppableId.toLowerCase(),
-        JSON.stringify(startTasks)
-      );
-
-      // console.log(destination);
-      console.log(movedTask);
-      movedTask.category = destination.droppableId;
-      console.log(movedTask);
-
-      const finishTasks = Array.from(destinationTasks);
-      finishTasks.splice(destination.index, 0, movedTask);
-      setDestinationTasks(finishTasks);
-      localStorage.setItem(
-        destination.droppableId.toLowerCase(),
-        JSON.stringify(finishTasks)
-      );
+      destinationBoard.todos.splice(destination.index, 0, movedTask);
     }
+
+    const updatedBoards = [...taskBoards];
+    updatedBoards[sourceBoardIndex] = sourceBoard;
+    updatedBoards[destinationBoardIndex] = destinationBoard;
+
+    setTaskBoards(updatedBoards);
+    localStorage.setItem("taskboards", JSON.stringify(updatedBoards));
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div className="flex flex-col w-full md:flex md:flex-row md:justify-between md:items-start gap-8 px-8 mt-16">
-        <div className="bg-gradient-to-t from-amber-400 to-slate-800 px-4 py-8 rounded-lg flex-1">
-          <TaskBoard
-            heading="To do"
-            todos={todos}
-            addNewTask={addNewTask}
-            category="TODOS"
-            removeTodo={removeTask}
-            editTodo={editTask}
-            onUpdateSubtasks={handleUpdateSubtasks}
-          />
-        </div>
-        <div className="bg-gradient-to-t from-indigo-400 to-slate-950 px-4 py-8 rounded-lg flex-1">
-          <TaskBoard
-            heading="In Progress"
-            todos={inProgress}
-            addNewTask={addNewTask}
-            category="INPROGRESS"
-            removeTodo={removeTask}
-            editTodo={editTask}
-            onUpdateSubtasks={handleUpdateSubtasks}
-          />
-        </div>
-        <div className="bg-gradient-to-t from-cyan-400 to-slate-900 px-4 py-8 rounded-lg flex-1">
-          <TaskBoard
-            heading="Done"
-            todos={done}
-            addNewTask={addNewTask}
-            category="DONE"
-            removeTodo={removeTask}
-            editTodo={editTask}
-            onUpdateSubtasks={handleUpdateSubtasks}
-          />
-        </div>
-      </div>
+      <Droppable droppableId="all-boards" direction="horizontal" type="board">
+        {(provided) => (
+          <div
+            className="flex flex-col w-full md:flex md:flex-row md:items-start gap-8 px-8 mt-16"
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            {taskBoards.map((taskBoard, index) => {
+              const { heading, todos, id } = taskBoard;
+              return (
+                <Draggable draggableId={id} index={index} key={id}>
+                  {(provided) => (
+                    <div
+                      className="px-4 py-8 rounded-2xl bg-[#001422] text-white w-80 max-w-sm"
+                      ref={provided.innerRef}
+                      {...provided.draggableProps}
+                      {...provided.dragHandleProps}
+                    >
+                      <TaskBoard
+                        heading={heading}
+                        boardId={id}
+                        todos={todos}
+                        addNewTask={addNewTask}
+                        removeTodo={removeTask}
+                        editTodo={editTask}
+                        onUpdateSubtasks={handleUpdateSubtasks}
+                        onUpdateBoardTitle={onUpdateBoardTitle}
+                        onDeleteBoard={handleDeleteTaskBoard}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              );
+            })}
+            {provided.placeholder}
+
+            {addingNewList === true ? (
+              <div className="px-4 py-8 rounded-lg bg-[#001422] text-white max-w-80">
+                <input
+                  type="text"
+                  value={newTaskBoardTitle}
+                  onChange={(e) => setNewTaskBoardTitle(e.target.value)}
+                  placeholder="Enter list name..."
+                  className="block w-full px-4 py-2 mb-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-black text-white"
+                />
+                <div className="flex gap-4 mt-4">
+                  <button
+                    className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+                    onClick={handleAddTaskBoard}
+                    disabled={newTaskBoardTitle === ""}
+                  >
+                    Add list
+                  </button>
+                  <button
+                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                    onClick={() => setAddingNewList(false)}
+                  >
+                    Discard
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <button
+                className="bg-gray-100/30 px-6 py-2 rounded-xl text-xl flex justify-center items-center gap-2 flex-wrap w-max"
+                onClick={() => setAddingNewList(true)}
+              >
+                <span className="text-2xl">+</span>
+                <p>
+                  {taskBoards.length === 0 ? "Add a list" : "Add another list"}
+                </p>
+              </button>
+            )}
+          </div>
+        )}
+      </Droppable>
     </DragDropContext>
   );
 };

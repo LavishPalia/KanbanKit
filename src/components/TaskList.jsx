@@ -11,19 +11,11 @@ const TaskList = ({ todos, removeTodo, editTodo, onTitleClick }) => {
     setEditText(todo.title);
   };
 
-  const handleSaveEdit = (todo) => {
-    editTodo(todo.category, editText, todo.id);
+  const handleSaveEdit = (todoId) => {
+    editTodo(editText, todoId);
 
     setEditingTodoId(null);
   };
-
-  if (todos.length === 0) {
-    return (
-      <>
-        <h1 className="text-2xl font-bold">📝 Start adding your first task </h1>
-      </>
-    );
-  }
 
   return (
     <div>
@@ -33,7 +25,9 @@ const TaskList = ({ todos, removeTodo, editTodo, onTitleClick }) => {
           <Draggable key={todo.id} draggableId={todo.id} index={index}>
             {(provided) => (
               <div
-                className="flex justify-between items-center gap-4 bg-slate-400 mb-2 p-2 rounded-md md:max-w-96 min-h-12 max-h-20"
+                className={`flex justify-between items-center gap-4 mb-2 p-2 rounded-md md:max-w-96 min-h-12 max-h-20 ${
+                  isEditing ? "bg-transparent" : "bg-slate-500"
+                }`}
                 onMouseEnter={() => setHoveredTodoId(todo.id)}
                 onMouseLeave={() => setHoveredTodoId(null)}
                 ref={provided.innerRef}
@@ -41,33 +35,26 @@ const TaskList = ({ todos, removeTodo, editTodo, onTitleClick }) => {
                 {...provided.dragHandleProps}
               >
                 {isEditing ? (
-                  <div className="flex justify-between items-center flex-1 gap-2">
+                  <div className="flex justify-between items-center gap-2">
                     <input
                       type="text"
                       name="todo"
                       id="edittodo"
                       value={editText}
                       onChange={(e) => setEditText(e.target.value)}
-                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-black text-white"
+                      className="w-full flex-1 px-4 py-2 border rounded-md border-none focus:outline-none focus:ring-1 focus:ring-green-500 bg-[#22272B] text-white"
                     />
                     <button
                       className="bg-gray-300 hover:bg-gray-200 p-2 rounded-md"
-                      onClick={() => handleSaveEdit(todo)}
+                      onClick={() => handleSaveEdit(todo.id)}
                     >
                       ✔️
-                    </button>
-
-                    <button
-                      className="bg-gray-300 hover:bg-gray-200 p-2 rounded-md"
-                      onClick={() => setEditingTodoId(null)}
-                    >
-                      ✖️
                     </button>
                   </div>
                 ) : (
                   <>
                     <h1
-                      className="text-gray-800 font-medium text-[15px] max-w-80 text-wrap cursor-pointer"
+                      className="text-gray-900 font-semibold text-[16px] max-w-80 text-wrap cursor-pointer"
                       onClick={() => onTitleClick(todo)}
                     >
                       {todo.title}
@@ -82,7 +69,7 @@ const TaskList = ({ todos, removeTodo, editTodo, onTitleClick }) => {
                         </button>
                         <button
                           className="mr-2 bg-gray-300 hover:bg-gray-200 p-2 rounded-md text-[10px]"
-                          onClick={() => removeTodo(todo.category, todo.id)}
+                          onClick={() => removeTodo(todo.id)}
                         >
                           ✖️
                         </button>

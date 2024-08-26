@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-const TaskDetail = ({ task, onClose, onSubtaskUpdate }) => {
-  const { title, category } = task;
+const TaskDetail = ({ task, onClose, onSubtaskUpdate, boardTitle }) => {
+  const { title } = task;
 
   const [subtasks, setSubtasks] = useState(task.subtasks || []);
   const [subtask, setSubtask] = useState("");
@@ -24,8 +24,6 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate }) => {
   };
 
   const handleAddSubTask = () => {
-    // console.log(subtasks);
-
     const newSubtask = {
       id: self.crypto.randomUUID(),
       title: subtask,
@@ -38,6 +36,7 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate }) => {
     onSubtaskUpdate(updatedSubtasks);
 
     setSubtask("");
+    setIsAdding(false);
   };
 
   const handleToggleSubtaskComplete = (subtaskId) => {
@@ -47,20 +46,19 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate }) => {
         : subtask;
     });
     setSubtasks(updatedSubtasks);
+
     onSubtaskUpdate(updatedSubtasks);
   };
 
   const handleEditSubtask = (id) => {
-    // console.log(id, editedSubtask);
-
     const updatedSubtasks = subtasks.map((subtask) => {
       return subtask.id === id ? { ...subtask, title: editedSubtask } : subtask;
     });
 
-    // console.log(updatedSubtasks);
-
     setSubtasks(updatedSubtasks);
+
     onSubtaskUpdate(updatedSubtasks);
+
     setEditingSubtaskId(null);
   };
 
@@ -79,11 +77,7 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate }) => {
           className="text-cyan-700 font-bold text-xl underline underline-offset-4 cursor-pointer"
           onClick={onClose}
         >
-          {category === "TODOS"
-            ? "To do"
-            : category === "INPROGRESS"
-            ? "In Progress"
-            : "Done"}
+          {boardTitle}
         </button>
       </p>
 
@@ -169,7 +163,6 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate }) => {
       {isAdding ? (
         <div className="mt-4">
           <input
-            // ref={inputRef}
             type="text"
             value={subtask}
             onChange={(e) => setSubtask(e.target.value)}
