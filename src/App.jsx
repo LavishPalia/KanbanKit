@@ -162,31 +162,6 @@ const App = () => {
       setTaskBoards(updatedBoards);
       localStorage.setItem("taskboards", JSON.stringify(updatedBoards));
     }
-
-    const sourceBoardIndex = taskBoards.findIndex(
-      (board) => board.id === source.droppableId
-    );
-    const destinationBoardIndex = taskBoards.findIndex(
-      (board) => board.id === destination.droppableId
-    );
-
-    const sourceBoard = taskBoards[sourceBoardIndex];
-    const destinationBoard = taskBoards[destinationBoardIndex];
-
-    const [movedTask] = sourceBoard.todos.splice(source.index, 1);
-
-    if (source.droppableId === destination.droppableId) {
-      sourceBoard.todos.splice(destination.index, 0, movedTask);
-    } else {
-      destinationBoard.todos.splice(destination.index, 0, movedTask);
-    }
-
-    const updatedBoards = [...taskBoards];
-    updatedBoards[sourceBoardIndex] = sourceBoard;
-    updatedBoards[destinationBoardIndex] = destinationBoard;
-
-    setTaskBoards(updatedBoards);
-    localStorage.setItem("taskboards", JSON.stringify(updatedBoards));
   };
 
   return (
