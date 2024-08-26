@@ -170,7 +170,7 @@ const App = () => {
       <Droppable droppableId="all-boards" direction="horizontal" type="board">
         {(provided) => (
           <div
-            className="flex flex-col w-full md:flex md:flex-row md:items-start gap-8 px-8 mt-12"
+            className="flex flex-col w-full md:flex md:flex-row md:items-start gap-8 px-8 mt-12 min-h-screen"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >

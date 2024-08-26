@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+*::-webkit-scrollbar {
+  @apply bg-transparent w-3;
+}
+
+*::-webkit-scrollbar-thumb {
+  @apply bg-gray-950 rounded-full;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -15,7 +23,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #8F3F65;
+  background-color: #8f3f65;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
