@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <div className="p-4 bg-gray-800 text-white flex flex-col items-center">
       <div className="mb-4">
-        &copy; {new Date().getFullYear()} Your Name. All rights reserved.
+        &copy; {new Date().getFullYear()} KanbanKit. All rights reserved.
       </div>
       <div className="mb-4 text-lg">
         Built with ❤️ by &nbsp;
