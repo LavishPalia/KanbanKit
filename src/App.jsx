@@ -14,6 +14,8 @@ const App = () => {
   const [newTaskBoardTitle, setNewTaskBoardTitle] = useState("");
   const [addingNewList, setAddingNewList] = useState(false);
 
+  const [isDragDisabled, setIsDragDisabled] = useState(false);
+
   const handleAddTaskBoard = () => {
     const newTaskBoard = {
       id: self.crypto.randomUUID(),
@@ -164,6 +166,10 @@ const App = () => {
     }
   };
 
+  const disableDragOnModal = (isOpen) => {
+    setIsDragDisabled(isOpen);
+  };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Header />
@@ -177,7 +183,12 @@ const App = () => {
             {taskBoards.map((taskBoard, index) => {
               const { heading, todos, id } = taskBoard;
               return (
-                <Draggable draggableId={id} index={index} key={id}>
+                <Draggable
+                  draggableId={id}
+                  index={index}
+                  key={id}
+                  isDragDisabled={isDragDisabled}
+                >
                   {(provided) => (
                     <div
                       className="px-4 py-8 rounded-2xl bg-[#001422] text-white w-80 max-w-sm"
@@ -195,6 +206,7 @@ const App = () => {
                         onUpdateSubtasks={handleUpdateSubtasks}
                         onUpdateBoardTitle={onUpdateBoardTitle}
                         onDeleteBoard={handleDeleteTaskBoard}
+                        disableDragOnModal={disableDragOnModal}
                       />
                     </div>
                   )}

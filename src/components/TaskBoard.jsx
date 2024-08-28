@@ -14,6 +14,7 @@ const TaskBoard = ({
   onUpdateSubtasks,
   onUpdateBoardTitle,
   onDeleteBoard,
+  disableDragOnModal,
 }) => {
   const [isAdding, setIsAdding] = useState(false);
   const [isEditingTitle, setIsEditingTitle] = useState(false);
@@ -54,10 +55,12 @@ const TaskBoard = ({
   const openModal = (task) => {
     setIsModalOpen(true);
     setCurrentTask(task);
+    disableDragOnModal(true);
   };
   const closeModal = () => {
     setIsModalOpen(false);
     setCurrentTask(null);
+    disableDragOnModal(false);
   };
 
   const handleSubtaskUpdate = (updatedSubtasks) => {
