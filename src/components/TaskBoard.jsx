@@ -24,11 +24,11 @@ const TaskBoard = ({
   const [updatedTaskBoardTitle, setUpdatedTaskBoardTitle] = useState("");
 
   const inputRef = useRef(null);
-  const boardTitleInputRef = useRef(null);
+  const boardTitleRef = useRef(null);
 
   useEffect(() => {
-    if (isEditingTitle && boardTitleInputRef.current) {
-      boardTitleInputRef.current.focus();
+    if (isEditingTitle && boardTitleRef.current) {
+      boardTitleRef.current.focus();
     }
   }, [isEditingTitle]);
 
@@ -99,16 +99,16 @@ const TaskBoard = ({
               type="text"
               name="Board Title"
               id="editboardtitle"
-              ref={boardTitleInputRef}
+              ref={boardTitleRef}
               value={updatedTaskBoardTitle}
               onChange={(e) => setUpdatedTaskBoardTitle(e.target.value)}
               onKeyDown={handleBoardTitleUpdate}
               className="w-full flex-1 px-4 py-2 mb-3 border rounded-md border-none focus:outline-none focus:ring-1 focus:ring-green-500 bg-[#22272B] text-white"
             />
           ) : (
-            <div className="flex items-start justify-between relative">
+            <div className="flex relative justify-between items-start">
               <p
-                className="mb-4 text-2xl cursor-pointer max-w-44 w-full tracking-tight"
+                className="w-full text-2xl tracking-tight cursor-pointer max-w-44"
                 onClick={() => {
                   setUpdatedTaskBoardTitle(heading);
                   setIsEditingTitle(true);
@@ -138,18 +138,18 @@ const TaskBoard = ({
                 value={newTask}
                 onChange={(e) => setNewTask(e.target.value)}
                 placeholder="Enter a task..."
-                className="block w-full px-4 py-2 mb-2 border-none rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-black text-white"
+                className="block px-4 py-2 mb-2 w-full text-white bg-black rounded-md border-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
               />
               <div className="flex gap-4">
                 <button
-                  className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+                  className="px-2 py-1 text-white bg-indigo-500 rounded-sm transition-all delay-200 hover:scale-95"
                   onClick={handleAddTask}
                   disabled={newTask === ""}
                 >
                   Add Card
                 </button>
                 <button
-                  className="bg-red-500 text-white px-4 py-2 rounded-md"
+                  className="px-2 py-1 text-white bg-red-500 rounded-sm transition-all delay-200 hover:scale-95"
                   onClick={handleDiscard}
                 >
                   Discard
@@ -158,10 +158,10 @@ const TaskBoard = ({
             </div>
           ) : (
             <button
-              className="text-xl mt-2 bg-slate-900 font-medium px-6 py-2 rounded-md"
+              className="px-4 py-1 mt-1 text-xl font-medium rounded-md transition-all delay-200 hover:scale-95 bg-slate-900 hover:bg-slate-800"
               onClick={handleAddCardClick}
             >
-              <span className="text-2xl">+</span> &nbsp;Add a Card
+              + Add a Card
             </button>
           )}
           {provided.placeholder}

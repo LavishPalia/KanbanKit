@@ -74,7 +74,7 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate, boardTitle }) => {
       <p className="mt-1">
         in list &nbsp;
         <button
-          className="text-cyan-700 font-bold text-xl underline underline-offset-4 cursor-pointer"
+          className="text-xl font-bold text-cyan-700 underline cursor-pointer underline-offset-4"
           onClick={onClose}
         >
           {boardTitle}
@@ -86,43 +86,43 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate, boardTitle }) => {
           <p>📋 Add a subtask to organize your work</p>
         </div>
       ) : (
-        <div className="mt-8 p-4 bg-stone-900/90 max-w-xl w-full md:w-3/5 rounded-lg">
-          <p className="text-xl tracking-wide uppercase ">Subtasks</p>
+        <div className="p-4 mt-8 w-full max-w-xl rounded-lg bg-stone-900/90 md:w-3/5">
+          <p className="text-xl tracking-wide uppercase">Subtasks</p>
           {subtasks.map((subtask) => {
             const isEditing = editingSubtaskId === subtask.id;
             return (
               <div
-                className="mt-1 flex gap-3"
+                className="flex gap-3 mt-1"
                 key={subtask.id}
                 onMouseEnter={() => setHoveredSubtaskId(subtask.id)}
                 onMouseLeave={() => setHoveredSubtaskId(null)}
               >
                 {isEditing ? (
-                  <div className="flex justify-between items-center flex-1 gap-2">
+                  <div className="flex flex-1 gap-2 justify-between items-center">
                     <input
                       type="text"
                       name="Edit Subtask"
                       id="editsubtask"
                       value={editedSubtask}
                       onChange={(e) => setEditedSubtask(e.target.value)}
-                      className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 bg-black text-white"
+                      className="px-4 py-2 w-full text-white bg-black rounded-md border focus:outline-none focus:ring-2 focus:ring-green-500"
                     />
                     <button
-                      className="bg-gray-300 hover:bg-gray-200 p-2 rounded-md"
+                      className="p-2 bg-gray-300 rounded-md hover:bg-gray-200"
                       onClick={() => handleEditSubtask(subtask.id)}
                     >
                       ✔️
                     </button>
 
                     <button
-                      className="bg-gray-300 hover:bg-gray-200 p-2 rounded-md"
+                      className="p-2 bg-gray-300 rounded-md hover:bg-gray-200"
                       onClick={() => setEditingSubtaskId(null)}
                     >
                       ✖️
                     </button>
                   </div>
                 ) : (
-                  <div className="flex w-full min-h-12 items-center justify-between hover:bg-gray-700/75 px-2 py-1 rounded-lg">
+                  <div className="flex justify-between items-center px-2 py-1 w-full rounded-lg min-h-12 hover:bg-gray-700/75">
                     <div className="flex gap-2 justify-center items-center">
                       <input
                         type="checkbox"
@@ -130,9 +130,9 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate, boardTitle }) => {
                         id=""
                         checked={subtask.completed}
                         onChange={() => handleToggleSubtaskComplete(subtask.id)}
-                        className="w-6 h-14 md:w-4 md:h-8 cursor-pointer"
+                        className="w-6 h-14 cursor-pointer md:w-4 md:h-8"
                       />
-                      <h2 className="text-xl md:text-lg flex-1 ml-3 max-w-52 md:max-w-xl">
+                      <h2 className="flex-1 ml-3 text-xl md:text-lg max-w-52 md:max-w-xl">
                         {subtask.title} {subtask.completed && "🏅"}
                       </h2>
                     </div>
@@ -167,19 +167,18 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate, boardTitle }) => {
             value={subtask}
             onChange={(e) => setSubtask(e.target.value)}
             placeholder="Enter a subtask..."
-            className="block w-full max-w-96 px-4 py-2 mb-2 border rounded-md focus:outline-none 
-            focus:ring-2 focus:ring-indigo-500 bg-black text-white"
+            className="block px-4 py-2 mb-2 w-full text-white bg-black rounded-sm border focus:border-none max-w-96 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <div className="flex gap-4">
             <button
-              className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+              className="px-2 py-1 text-white bg-indigo-500 rounded-sm transition-all delay-200 hover:bg-indigo-600 hover:scale-95"
               onClick={handleAddSubTask}
               disabled={subtask === ""}
             >
               Add Subtask
             </button>
             <button
-              className="bg-red-500 text-white px-4 py-2 rounded-md"
+              className="px-2 py-1 text-white bg-red-500 rounded-sm transition-all delay-200 hover:bg-red-600 hover:scale-95"
               onClick={handleDiscard}
             >
               Discard
@@ -188,10 +187,10 @@ const TaskDetail = ({ task, onClose, onSubtaskUpdate, boardTitle }) => {
         </div>
       ) : (
         <button
-          className="text-2xl md:text-xl mt-4 bg-slate-900 font-medium px-6 py-2 rounded-md"
+          className="px-3 py-1 mt-4 text-2xl font-medium rounded-sm transition-all delay-200 md:text-xl bg-slate-900 hover:bg-slate-800 hover:scale-95"
           onClick={handleAddCardClick}
         >
-          <span className="text-3xl md:text-2xl">+</span> &nbsp;Add Subtask
+          + Add Subtask
         </button>
       )}
     </div>

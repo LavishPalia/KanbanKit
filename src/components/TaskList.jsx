@@ -35,7 +35,7 @@ const TaskList = ({ todos, removeTodo, editTodo, onTitleClick }) => {
                 {...provided.dragHandleProps}
               >
                 {isEditing ? (
-                  <div className="flex justify-between items-center gap-2">
+                  <div className="flex gap-2 justify-between items-center">
                     <input
                       type="text"
                       name="todo"
@@ -45,7 +45,7 @@ const TaskList = ({ todos, removeTodo, editTodo, onTitleClick }) => {
                       className="w-full flex-1 px-4 py-2 border rounded-md border-none focus:outline-none focus:ring-1 focus:ring-green-500 bg-[#22272B] text-white"
                     />
                     <button
-                      className="bg-gray-300 hover:bg-gray-200 p-2 rounded-md"
+                      className="p-2 bg-gray-300 rounded-md hover:bg-gray-200"
                       onClick={() => handleSaveEdit(todo.id)}
                       disabled={editText === ""}
                     >
@@ -63,13 +63,13 @@ const TaskList = ({ todos, removeTodo, editTodo, onTitleClick }) => {
                     {hoveredTodoId === todo.id && (
                       <div className="flex">
                         <button
-                          className="mr-2 bg-gray-300 hover:bg-gray-200 p-2 rounded-md text-black text-[10px]"
+                          className="mr-2 bg-gray-400 hover:bg-gray-300 hover:scale-95 p-2 rounded-md text-black text-[10px] transition-all delay-200"
                           onClick={() => handleEditClick(todo)}
                         >
                           ✎
                         </button>
                         <button
-                          className="mr-2 bg-gray-300 hover:bg-gray-200 p-2 rounded-md text-[10px]"
+                          className="mr-2 bg-gray-400 hover:bg-gray-300 hover:scale-95 p-2 rounded-md text-[10px] transition-all delay-200"
                           onClick={() => removeTodo(todo.id)}
                         >
                           ✖️

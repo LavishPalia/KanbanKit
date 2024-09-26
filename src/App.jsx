@@ -176,7 +176,7 @@ const App = () => {
       <Droppable droppableId="all-boards" direction="horizontal" type="board">
         {(provided) => (
           <div
-            className="flex flex-col w-full md:flex md:flex-row md:items-start gap-8 px-8 mt-12 min-h-screen"
+            className="flex overflow-x-scroll flex-col gap-8 px-8 mt-12 w-full min-h-screen md:flex md:flex-row md:items-start"
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
@@ -191,7 +191,7 @@ const App = () => {
                 >
                   {(provided) => (
                     <div
-                      className="px-4 py-8 rounded-2xl bg-[#001422] text-white w-80 max-w-sm"
+                      className="px-3 py-3 rounded-lg bg-[#001422] text-white min-w-80 max-w-sm"
                       ref={provided.innerRef}
                       {...provided.draggableProps}
                       {...provided.dragHandleProps}
@@ -216,25 +216,24 @@ const App = () => {
             {provided.placeholder}
 
             {addingNewList === true ? (
-              <div className="px-4 py-8 rounded-lg bg-[#001422] text-white max-w-80">
+              <div className="px-2 py-4 rounded-lg bg-[#001422] text-white min-w-80">
                 <input
                   type="text"
                   value={newTaskBoardTitle}
                   onChange={(e) => setNewTaskBoardTitle(e.target.value)}
                   placeholder="Enter list name..."
-                  className="block w-full px-4 py-2 mb-2 border rounded-md focus:outline-none
-                   focus:ring-2 focus:ring-indigo-500 bg-black text-white"
+                  className="block px-4 py-2 mb-2 w-full text-white bg-black rounded-sm border-0 focus:border-none focus:outline-none focus:ring-1 focus:ring-indigo-500"
                 />
-                <div className="flex gap-4 mt-4">
+                <div className="flex gap-4 mt-1">
                   <button
-                    className="bg-indigo-500 text-white px-4 py-2 rounded-md"
+                    className="px-4 py-2 text-white bg-indigo-500 rounded-sm"
                     onClick={handleAddTaskBoard}
                     disabled={newTaskBoardTitle === ""}
                   >
                     Add list
                   </button>
                   <button
-                    className="bg-red-500 text-white px-4 py-2 rounded-md"
+                    className="px-4 py-2 text-white bg-red-500 rounded-sm"
                     onClick={() => setAddingNewList(false)}
                   >
                     Discard
@@ -243,12 +242,11 @@ const App = () => {
               </div>
             ) : (
               <button
-                className="bg-gray-100/30 px-6 py-2 rounded-xl text-xl flex justify-center items-center gap-2 flex-wrap w-max"
+                className="px-1 py-1 text-xl rounded-md min-w-52 bg-gray-100/30"
                 onClick={() => setAddingNewList(true)}
               >
-                <span className="text-2xl">+</span>
                 <p>
-                  {taskBoards.length === 0 ? "Add a list" : "Add another list"}
+                  {taskBoards.length === 0 ? "+ Add a list" : "+ Add another list"}
                 </p>
               </button>
             )}
